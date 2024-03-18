@@ -46,4 +46,19 @@ public class OrderServiceImpl implements OrderService {
     public boolean existsById(Long id) {
         return orderRepository.existsById(id);
     }
+
+    @Override
+    public Order updateOrderStatus(Long id) {
+        Optional<Order> order = orderRepository.findById(id);
+        if (order.isEmpty())
+            return null;
+        if (order.get().getOrderStatus()==OrderStatus.placed)
+            order.get().setOrderStatus(OrderStatus.preparing);
+        else if (order.get().getOrderStatus()==OrderStatus.preparing)
+            order.get().setOrderStatus(OrderStatus.ready);
+        else
+            return null;
+        orderRepository.save(order.get());
+        return order.get();
+    }
 }

@@ -56,4 +56,13 @@ public class OrderControllerImpl implements OrderController {
         orderService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+    @Override
+    @PostMapping(value = "/update-status/{id}")
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id) {
+        if (orderService.updateOrderStatus(id) == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
