@@ -2,6 +2,7 @@ package com.awesomepizza.awesomepizzaapi.controller.impl;
 
 import com.awesomepizza.awesomepizzaapi.controller.OrderController;
 import com.awesomepizza.awesomepizzaapi.model.Order;
+import com.awesomepizza.awesomepizzaapi.model.OrderStatus;
 import com.awesomepizza.awesomepizzaapi.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,10 +60,25 @@ public class OrderControllerImpl implements OrderController {
 
 
     @Override
-    @PostMapping(value = "/update-status/{id}")
+    @PutMapping(value = "/update-status/{id}")
     public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id) {
         if (orderService.updateOrderStatus(id) == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping(value = "/get-order-status/{id}")
+    public ResponseEntity<OrderStatus> getOrderStatus(@PathVariable Long id) {
+        OrderStatus status;
+        if ((status = orderService.getOrderStatus(id)) == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(status, HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping(value = "/get-orders-by-status/{status}")
+    public ResponseEntity<Collection<Order>> getOrdersByStatus(@PathVariable OrderStatus status) {
+        return  new ResponseEntity<>(orderService.getOrdersByStatus(status), HttpStatus.OK);
     }
 }

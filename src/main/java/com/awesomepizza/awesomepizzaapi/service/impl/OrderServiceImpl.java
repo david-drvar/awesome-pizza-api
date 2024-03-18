@@ -61,4 +61,15 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order.get());
         return order.get();
     }
+
+    @Override
+    public OrderStatus getOrderStatus(Long id) {
+        Optional<Order> order = this.orderRepository.findById(id);
+        return order.map(Order::getOrderStatus).orElse(null);
+    }
+
+    @Override
+    public Collection<Order> getOrdersByStatus(OrderStatus status) {
+        return this.orderRepository.findAllByOrderStatus(status);
+    }
 }
