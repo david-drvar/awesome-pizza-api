@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_generator")
-    @SequenceGenerator(name="order_generator", sequenceName = "order_seq", allocationSize=1, initialValue = 1)
+    @SequenceGenerator(name = "order_generator", sequenceName = "order_seq", allocationSize = 1)
     private Long id;
 
     @JsonFormat(pattern = "HH:mm:ss yyyy-MM-dd")
@@ -36,5 +37,11 @@ public class Order {
 
     @Column
     private String address;
+
+    @ManyToMany
+    @JoinTable(name = "order_pizza",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "pizza_id"))
+    private List<Pizza> pizzaList;
 
 }

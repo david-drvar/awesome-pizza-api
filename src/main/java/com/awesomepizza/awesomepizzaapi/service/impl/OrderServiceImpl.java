@@ -22,7 +22,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order save(Order entity) {
-        entity.setOrderStatus(OrderStatus.placed);
+        entity.setOrderStatus(OrderStatus.PLACED);
         entity.setTimestamp(LocalDateTime.now());
         return orderRepository.save(entity);
     }
@@ -52,10 +52,10 @@ public class OrderServiceImpl implements OrderService {
         Optional<Order> order = orderRepository.findById(id);
         if (order.isEmpty())
             return null;
-        if (order.get().getOrderStatus()==OrderStatus.placed)
-            order.get().setOrderStatus(OrderStatus.preparing);
-        else if (order.get().getOrderStatus()==OrderStatus.preparing)
-            order.get().setOrderStatus(OrderStatus.ready);
+        if (order.get().getOrderStatus() == OrderStatus.PLACED)
+            order.get().setOrderStatus(OrderStatus.PREPARING);
+        else if (order.get().getOrderStatus() == OrderStatus.PREPARING)
+            order.get().setOrderStatus(OrderStatus.READY);
         else
             return null;
         orderRepository.save(order.get());
