@@ -19,7 +19,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonFormat(pattern = "HH:mm:ss yyyy-MM-dd")
+    @JsonFormat(pattern = "HH:mm:ss.SSSSSS yyyy-MM-dd")
     private LocalDateTime timestamp;
 
     @Column
