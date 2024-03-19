@@ -1,12 +1,10 @@
 package com.awesomepizza.awesomepizzaapi.controller;
 
 import com.awesomepizza.awesomepizzaapi.dto.OrderDTO;
-import com.awesomepizza.awesomepizzaapi.model.Order;
 import com.awesomepizza.awesomepizzaapi.model.OrderStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface OrderController {
 
@@ -16,7 +14,7 @@ public interface OrderController {
 
     ResponseEntity<Collection<OrderDTO>> read();
 
-    ResponseEntity<Optional<Order>> read(Long id); //todo fix
+    ResponseEntity<OrderDTO> read(Long id);
 
     ResponseEntity<Void> delete(Long id);
 

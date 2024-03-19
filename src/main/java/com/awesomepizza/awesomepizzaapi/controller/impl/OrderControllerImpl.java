@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -56,8 +55,8 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Optional<Order>> read(@PathVariable Long id) {
-        return new ResponseEntity<>(orderService.read(id), HttpStatus.OK);
+    public ResponseEntity<OrderDTO> read(@PathVariable Long id) {
+        return new ResponseEntity<>(modelMapper.map(orderService.read(id), OrderDTO.class), HttpStatus.OK);
     }
 
     @Override
