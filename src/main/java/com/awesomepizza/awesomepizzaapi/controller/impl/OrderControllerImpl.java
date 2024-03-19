@@ -59,15 +59,6 @@ public class OrderControllerImpl implements OrderController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-    @Override
-    @PutMapping(value = "/update-status/{id}") //todo do I even need this method
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id) {
-        if (orderService.updateOrderStatus(id) == null)
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @Override
     @GetMapping(value = "/get-order-status/{id}")
     public ResponseEntity<OrderStatus> getOrderStatus(@PathVariable Long id) {

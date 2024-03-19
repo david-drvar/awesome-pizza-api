@@ -33,4 +33,7 @@ public class PizzaCombo {
 
     @ManyToMany(mappedBy = "pizzaComboList")
     private List<Order> orders;
+
+    @Column
+    private Double price;
 }

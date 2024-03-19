@@ -30,4 +30,7 @@ public class PremadePizza {
     @OneToMany(mappedBy = "premadePizza")
     private List<PizzaCombo> pizzaCombos;
 
+    @Column
+    private Double price;
+
 }
