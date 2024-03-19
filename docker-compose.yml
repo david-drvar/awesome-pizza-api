@@ -1,0 +1,91 @@
+#version: '3.8'
+#
+#services:
+#  postgres:
+#    image: postgres:latest
+#    container_name: postgres
+#    environment:
+#      POSTGRES_DB: pizza
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: root
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#
+#  app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: pizza
+#    depends_on:
+#      - postgres
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/pizza
+#      SPRING_DATASOURCE_USERNAME: postgres
+#      SPRING_DATASOURCE_PASSWORD: root
+#    ports:
+#      - "8080:8080"
+#    volumes:
+#      - ./logs:/logs
+#      - ./awesome-pizza-api-0.0.1-SNAPSHOT:/app  # Adjust this path to your application's directory
+#    command: ["java", "-jar", "/app/awesome-pizza-api-0.0.1-SNAPSHOT.jar"]
+#
+#volumes:
+#  postgres_data:
+#
+
+
+
+
+# ANOTHER ONE
+#version: '3.8'
+#
+#services:
+#  app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - db
+#
+#  db:
+#    image: postgres
+#    environment:
+#      POSTGRES_DB: pizza
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: root
+#    ports:
+#      - "5432:5432"
+
+
+
+version: '3.8'
+
+services:
+  app:
+    #    image: 'docker-spring-boot-postgres:latest'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+      - SPRING_DATASOURCE_USERNAME=compose-postgres
+      - SPRING_DATASOURCE_PASSWORD=compose-postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
+    environment:
+      - POSTGRES_USER=compose-postgres
+      - POSTGRES_PASSWORD=compose-postgres
+    ports:
+      - "5432:5432"
