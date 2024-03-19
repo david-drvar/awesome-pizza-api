@@ -21,12 +21,12 @@ public class Ingredient {
     @Column
     private String name;
 
-    @OneToMany(mappedBy = "ingredient")
+    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
     private List<IngredientPriceHistory> ingredientPriceHistory;
 
-    @ManyToMany(mappedBy = "extras")
+    @ManyToMany(mappedBy = "extras", fetch = FetchType.LAZY)
     private List<PizzaCombo> pizzaCombos;
 
-    @ManyToMany(mappedBy = "ingredientList")
+    @ManyToMany(mappedBy = "ingredientList", fetch = FetchType.LAZY)
     private List<PremadePizza> premadePizzas;
 }

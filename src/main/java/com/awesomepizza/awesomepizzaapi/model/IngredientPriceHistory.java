@@ -24,8 +24,7 @@ public class IngredientPriceHistory {
     @Column
     private LocalDateTime dateStart;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
-
 }

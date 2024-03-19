@@ -39,7 +39,7 @@ public class Order {
     @Column
     private String address;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "order_pizzacombo",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "pizzacombo_id"))

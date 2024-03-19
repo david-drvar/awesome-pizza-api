@@ -18,20 +18,20 @@ public class PizzaCombo {
     @SequenceGenerator(name = "pizza_generator", sequenceName = "pizza_seq", allocationSize = 1)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "premadePizza_id")
     private PremadePizza premadePizza;
 
     @Enumerated(EnumType.STRING)
     private PizzaSize pizzaSize;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "pizzacombo_ingredient",
             joinColumns = @JoinColumn(name = "pizzacombo_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
     private List<Ingredient> extras;
 
-    @ManyToMany(mappedBy = "pizzaComboList")
+    @ManyToMany(mappedBy = "pizzaComboList", fetch = FetchType.LAZY)
     private List<Order> orders;
 
     @Column

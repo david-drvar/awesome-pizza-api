@@ -21,13 +21,13 @@ public class PremadePizza {
     @Column
     private String name;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "premadePizza_ingredient",
             joinColumns = @JoinColumn(name = "premadePizza_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
     private List<Ingredient> ingredientList;
 
-    @OneToMany(mappedBy = "premadePizza")
+    @OneToMany(mappedBy = "premadePizza", fetch = FetchType.LAZY)
     private List<PizzaCombo> pizzaCombos;
 
     @Column
