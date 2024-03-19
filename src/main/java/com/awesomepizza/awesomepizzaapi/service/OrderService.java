@@ -19,11 +19,7 @@ public interface OrderService {
 
     boolean existsById(Long id);
 
-    Order updateOrderStatus(Long id);
-
     OrderStatus getOrderStatus(Long id);
-
-    Collection<Order> getOrdersByStatus(OrderStatus status);
 
     Order getNextOrder();
 

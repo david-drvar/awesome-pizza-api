@@ -98,30 +98,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    //todo probably can delete this
-    public Order updateOrderStatus(Long id) {
-        Optional<Order> order = orderRepository.findById(id); //todo check if the previous one is finished, only then you can start
-        if (order.isEmpty())
-            return null;
-        if (order.get().getOrderStatus() == OrderStatus.PLACED)
-            order.get().setOrderStatus(OrderStatus.PREPARING);
-        else if (order.get().getOrderStatus() == OrderStatus.PREPARING)
-            order.get().setOrderStatus(OrderStatus.READY);
-        else
-            return null;
-        orderRepository.save(order.get());
-        return order.get();
-    }
-
-    @Override
     public OrderStatus getOrderStatus(Long id) {
         Optional<Order> order = this.orderRepository.findById(id);
         return order.map(Order::getOrderStatus).orElse(null);
-    }
-
-    @Override
-    public Collection<Order> getOrdersByStatus(OrderStatus status) {
-        return this.orderRepository.findAllByOrderStatus(status);
     }
 
     @Override
