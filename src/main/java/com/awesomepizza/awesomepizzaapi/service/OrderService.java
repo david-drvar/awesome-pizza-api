@@ -12,4 +12,11 @@ public interface OrderService extends CRUDService<Order> {
     OrderStatus getOrderStatus(Long id);
 
     Collection<Order> getOrdersByStatus(OrderStatus status);
+
+    Order getNextOrder();
+
+    Order startOrder();
+
+    Order finishOrder();
+
 }

@@ -14,5 +14,12 @@ public interface OrderController extends CRUDController<Order>{
 
     ResponseEntity<Collection<Order>> getOrdersByStatus(OrderStatus orderStatus);
 
+    ResponseEntity<Order> getNextOrder();
+
+    ResponseEntity<Order> startOrder();
+
+    ResponseEntity<Order> finishOrder();
+
+
 
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Pizza {
+public class PizzaCombo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pizza_generator")
@@ -26,11 +26,11 @@ public class Pizza {
     private PizzaSize pizzaSize;
 
     @ManyToMany
-    @JoinTable(name = "pizza_ingredient",
-            joinColumns = @JoinColumn(name = "pizza_id"),
+    @JoinTable(name = "pizzacombo_ingredient",
+            joinColumns = @JoinColumn(name = "pizzacombo_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
     private List<Ingredient> extras;
 
-    @ManyToMany(mappedBy = "pizzaList")
+    @ManyToMany(mappedBy = "pizzaComboList")
     private List<Order> orders;
 }

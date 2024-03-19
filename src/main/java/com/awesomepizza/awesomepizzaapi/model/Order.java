@@ -24,6 +24,7 @@ public class Order {
     private LocalDateTime timestamp;
 
     @Column
+//    @Pattern(regexp = "^(\\((00|\\+)39\\)|(00|\\+)39)?(38[890]|34[7-90]|36[680]|33[3-90]|32[89])\\d{7}$\n", message = "Italian phone numbers must be in format +39 349 1234567")
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
@@ -39,9 +40,9 @@ public class Order {
     private String address;
 
     @ManyToMany
-    @JoinTable(name = "order_pizza",
+    @JoinTable(name = "order_pizzacombo",
             joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "pizza_id"))
-    private List<Pizza> pizzaList;
+            inverseJoinColumns = @JoinColumn(name = "pizzacombo_id"))
+    private List<PizzaCombo> pizzaComboList;
 
 }

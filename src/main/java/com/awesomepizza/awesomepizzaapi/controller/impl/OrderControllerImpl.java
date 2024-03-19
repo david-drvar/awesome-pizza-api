@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @RestController
+@RequestMapping(value = "api/order")
 public class OrderControllerImpl implements OrderController {
 
     public final OrderService orderService;
@@ -38,7 +39,7 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
-    @GetMapping(value="getAll")
+    @GetMapping(value = "/getAll")
     public ResponseEntity<Collection<Order>> read() {
         return new ResponseEntity<>(orderService.read(), HttpStatus.OK);
     }
@@ -60,7 +61,7 @@ public class OrderControllerImpl implements OrderController {
 
 
     @Override
-    @PutMapping(value = "/update-status/{id}")
+    @PutMapping(value = "/update-status/{id}") //todo do I even need this method
     public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id) {
         if (orderService.updateOrderStatus(id) == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -79,6 +80,33 @@ public class OrderControllerImpl implements OrderController {
     @Override
     @GetMapping(value = "/get-orders-by-status/{status}")
     public ResponseEntity<Collection<Order>> getOrdersByStatus(@PathVariable OrderStatus status) {
-        return  new ResponseEntity<>(orderService.getOrdersByStatus(status), HttpStatus.OK);
+        return new ResponseEntity<>(orderService.getOrdersByStatus(status), HttpStatus.OK);
+    }
+
+    @Override
+    @GetMapping(value = "/next-order")
+    public ResponseEntity<Order> getNextOrder() {
+        Order order = orderService.getNextOrder();
+        if (order == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //todo can be empty as well
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    @Override
+    @PutMapping(value = "/start-order")
+    public ResponseEntity<Order> startOrder() {
+        Order order = orderService.startOrder();
+        if (order == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //todo can be empty as well
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    @Override
+    @PutMapping(value = "/finish-order")
+    public ResponseEntity<Order> finishOrder() {
+        Order order = orderService.finishOrder();
+        if (order == null)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //todo can be empty as well
+        return new ResponseEntity<>(order, HttpStatus.OK);
     }
 }

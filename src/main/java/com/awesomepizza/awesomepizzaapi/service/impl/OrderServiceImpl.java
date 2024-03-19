@@ -48,8 +48,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    //todo probably can delete this
     public Order updateOrderStatus(Long id) {
-        Optional<Order> order = orderRepository.findById(id);
+        Optional<Order> order = orderRepository.findById(id); //todo check if the previous one is finished, only then you can start
         if (order.isEmpty())
             return null;
         if (order.get().getOrderStatus() == OrderStatus.PLACED)
@@ -71,5 +72,68 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Collection<Order> getOrdersByStatus(OrderStatus status) {
         return this.orderRepository.findAllByOrderStatus(status);
+    }
+
+    @Override
+    public Order getNextOrder() {
+        //check if there is one that is preparing
+        //if there is, you cannot take next order
+        //only when the previous one is ready you can take
+        Optional<Order> firstPlacedOrder = orderRepository.findFirstByOrderStatusOrderByTimestampAsc(OrderStatus.PLACED);
+        if (firstPlacedOrder.isEmpty())
+            return null; //todo there is no more placed orders, that is okay as well
+
+        Optional<Order> previousOrder = orderRepository.findFirstByTimestampBeforeOrderByTimestampDesc(firstPlacedOrder.get().getTimestamp());
+        if (previousOrder.isEmpty())
+            return firstPlacedOrder.get(); //todo that is okay also because it can be the first order ever which doesnt have a previousone
+
+        if (previousOrder.get().getOrderStatus() != OrderStatus.READY)
+            return null; //todo error
+        return firstPlacedOrder.get();
+    }
+
+    @Override
+    public Order startOrder() {
+        //find oldest placed order
+        Optional<Order> firstPlacedOrder = orderRepository.findFirstByOrderStatusOrderByTimestampAsc(OrderStatus.PLACED);
+        if (firstPlacedOrder.isEmpty())
+            return null;
+
+        //check if the one before that one is completed
+        Optional<Order> previousOrder = orderRepository.findFirstByTimestampBeforeOrderByTimestampDesc(firstPlacedOrder.get().getTimestamp());
+        if (previousOrder.isEmpty()) {
+            firstPlacedOrder.get().setOrderStatus(OrderStatus.PREPARING);
+            orderRepository.save(firstPlacedOrder.get());
+            return firstPlacedOrder.get(); //todo fix this, is empty is also okay when it is the first order ever, it wont have previous one
+        }
+
+        if (previousOrder.get().getOrderStatus() != OrderStatus.READY)
+            return null; //todo return error saying that the previous order has to be finished first
+
+        firstPlacedOrder.get().setOrderStatus(OrderStatus.PREPARING);
+        orderRepository.save(firstPlacedOrder.get());
+        return firstPlacedOrder.get();
+    }
+
+    @Override
+    public Order finishOrder() {
+        Optional<Order> firstPlacedOrder = orderRepository.findFirstByOrderStatusOrderByTimestampAsc(OrderStatus.PREPARING);
+        if (firstPlacedOrder.isEmpty())
+            return null;
+
+        //check if the one before that one is completed
+        Optional<Order> previousOrder = orderRepository.findFirstByTimestampBeforeOrderByTimestampDesc(firstPlacedOrder.get().getTimestamp());
+        if (previousOrder.isEmpty()) {
+            firstPlacedOrder.get().setOrderStatus(OrderStatus.READY);
+            orderRepository.save(firstPlacedOrder.get());
+            return firstPlacedOrder.get(); //todo fix this, is empty is also okay when it is the first order ever, it wont have previous one
+        }
+
+        if (previousOrder.get().getOrderStatus() != OrderStatus.READY)
+            return null; //todo return error saying that the previous order has to be finished first
+
+        firstPlacedOrder.get().setOrderStatus(OrderStatus.READY);
+        orderRepository.save(firstPlacedOrder.get());
+        return firstPlacedOrder.get();
     }
 }

@@ -25,7 +25,7 @@ public class Ingredient {
     private List<IngredientPriceHistory> ingredientPriceHistory;
 
     @ManyToMany(mappedBy = "extras")
-    private List<Pizza> pizzas;
+    private List<PizzaCombo> pizzaCombos;
 
     @ManyToMany(mappedBy = "ingredientList")
     private List<PremadePizza> premadePizzas;

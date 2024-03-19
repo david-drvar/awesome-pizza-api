@@ -28,6 +28,6 @@ public class PremadePizza {
     private List<Ingredient> ingredientList;
 
     @OneToMany(mappedBy = "premadePizza")
-    private List<Pizza> pizzas;
+    private List<PizzaCombo> pizzaCombos;
 
 }
