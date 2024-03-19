@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PremadePizzaDTO {
+    private Long id;
     private String name;
     private List<IngredientDTO> ingredientList;
     private Double price;

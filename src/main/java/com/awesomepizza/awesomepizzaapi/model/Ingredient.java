@@ -14,8 +14,7 @@ import java.util.List;
 public class Ingredient {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ingredient_generator")
-    @SequenceGenerator(name = "ingredient_generator", sequenceName = "ingredient_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -29,4 +28,7 @@ public class Ingredient {
 
     @ManyToMany(mappedBy = "ingredientList", fetch = FetchType.LAZY)
     private List<PremadePizza> premadePizzas;
+
+    @Column
+    private Double price;
 }

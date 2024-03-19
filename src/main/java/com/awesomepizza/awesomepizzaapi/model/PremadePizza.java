@@ -14,8 +14,7 @@ import java.util.List;
 public class PremadePizza {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "premadepizza_generator")
-    @SequenceGenerator(name = "premadepizza_generator", sequenceName = "premadepizza_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column

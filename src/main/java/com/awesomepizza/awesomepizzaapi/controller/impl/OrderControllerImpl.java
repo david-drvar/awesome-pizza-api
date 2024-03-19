@@ -5,21 +5,22 @@ import com.awesomepizza.awesomepizzaapi.dto.OrderDTO;
 import com.awesomepizza.awesomepizzaapi.model.Order;
 import com.awesomepizza.awesomepizzaapi.model.OrderStatus;
 import com.awesomepizza.awesomepizzaapi.service.OrderService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.modelmapper.ModelMapper;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "api/order")
 public class OrderControllerImpl implements OrderController {
 
     private final OrderService orderService;
-    private final ModelMapper modelMapper; // Assuming you're using ModelMapper for mapping
+    private final ModelMapper modelMapper;
 
 
     @Autowired
@@ -28,16 +29,15 @@ public class OrderControllerImpl implements OrderController {
         this.modelMapper = modelMapper;
     }
 
-
     @Override
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<Order> save(@RequestBody Order entity) {
+    public ResponseEntity<OrderDTO> save(@RequestBody OrderDTO entity) {
         return new ResponseEntity<>(orderService.save(entity), HttpStatus.CREATED);
     }
 
     @Override
     @PutMapping(value = "/update")
-    public ResponseEntity<Order> update(@RequestBody Order entity) {
+    public ResponseEntity<OrderDTO> update(@RequestBody OrderDTO entity) {
         if(!orderService.existsById(entity.getId()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(orderService.save(entity), HttpStatus.CREATED);
@@ -45,8 +45,13 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @GetMapping(value = "/get-all")
-    public ResponseEntity<Collection<Order>> read() {
-        return new ResponseEntity<>(orderService.read(), HttpStatus.OK);
+    public ResponseEntity<Collection<OrderDTO>> read() {
+
+        Collection<Order> orders = orderService.read();
+        Collection<OrderDTO> orderDTOs = orders.stream()
+                .map(order -> modelMapper.map(order, OrderDTO.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(orderDTOs, HttpStatus.OK);
     }
 
     @Override
@@ -72,13 +77,6 @@ public class OrderControllerImpl implements OrderController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
-
-    //todo maybe I dont need this
-//    @Override
-//    @GetMapping(value = "/get-orders-by-status/{status}")
-//    public ResponseEntity<Collection<OrderDTO>> getOrdersByStatus(@PathVariable OrderStatus status) {
-//        return new ResponseEntity<>(orderService.getOrdersByStatus(status), HttpStatus.OK);
-//    }
 
     @Override
     @GetMapping(value = "/next-order")

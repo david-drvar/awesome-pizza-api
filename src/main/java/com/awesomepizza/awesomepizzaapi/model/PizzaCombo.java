@@ -14,8 +14,7 @@ import java.util.List;
 public class PizzaCombo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pizza_generator")
-    @SequenceGenerator(name = "pizza_generator", sequenceName = "pizza_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -16,8 +16,7 @@ import java.util.List;
 @Table(name = "pizza_orders")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_generator")
-    @SequenceGenerator(name = "order_generator", sequenceName = "order_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JsonFormat(pattern = "HH:mm:ss yyyy-MM-dd")
@@ -44,5 +43,8 @@ public class Order {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "pizzacombo_id"))
     private List<PizzaCombo> pizzaComboList;
+
+    @Column
+    private Double price;
 
 }

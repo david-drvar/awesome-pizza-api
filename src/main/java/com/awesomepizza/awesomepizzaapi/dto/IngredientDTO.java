@@ -10,5 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IngredientDTO {
+    private Long id;
     private String name;
 }

@@ -17,5 +17,4 @@ public class PizzaComboDTO {
     private PizzaSize pizzaSize;
     private List<IngredientDTO> extras;
     private Double price;
-
 }

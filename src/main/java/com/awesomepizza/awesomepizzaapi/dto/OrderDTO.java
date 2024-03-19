@@ -21,6 +21,7 @@ public class OrderDTO {
     private String customerName;
     private String customerSurname;
     private String address;
+    private Double price;
     private List<PizzaComboDTO> pizzaComboList;
 
 

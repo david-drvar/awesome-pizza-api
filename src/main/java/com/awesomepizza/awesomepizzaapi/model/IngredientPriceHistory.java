@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
 public class IngredientPriceHistory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ingredientpricehistory_generator")
-    @SequenceGenerator(name = "ingredientpricehistory_generator", sequenceName = "ingredientpricehistory_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column

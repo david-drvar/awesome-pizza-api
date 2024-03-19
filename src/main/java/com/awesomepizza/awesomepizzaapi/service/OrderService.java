@@ -1,11 +1,23 @@
 package com.awesomepizza.awesomepizzaapi.service;
 
+import com.awesomepizza.awesomepizzaapi.dto.OrderDTO;
 import com.awesomepizza.awesomepizzaapi.model.Order;
 import com.awesomepizza.awesomepizzaapi.model.OrderStatus;
 
 import java.util.Collection;
+import java.util.Optional;
 
-public interface OrderService extends CRUDService<Order> {
+public interface OrderService {
+
+    OrderDTO save(OrderDTO entity);
+
+    Collection<Order> read();
+
+    Optional<Order> read(Long id);
+
+    void delete(Long id);
+
+    boolean existsById(Long id);
 
     Order updateOrderStatus(Long id);
 

@@ -1,9 +1,16 @@
 package com.awesomepizza.awesomepizzaapi.service.impl;
 
+import com.awesomepizza.awesomepizzaapi.dto.OrderDTO;
+import com.awesomepizza.awesomepizzaapi.model.Ingredient;
 import com.awesomepizza.awesomepizzaapi.model.Order;
 import com.awesomepizza.awesomepizzaapi.model.OrderStatus;
+import com.awesomepizza.awesomepizzaapi.model.PizzaCombo;
+import com.awesomepizza.awesomepizzaapi.repository.IngredientRepository;
 import com.awesomepizza.awesomepizzaapi.repository.OrderRepository;
+import com.awesomepizza.awesomepizzaapi.repository.PizzaComboRepository;
+import com.awesomepizza.awesomepizzaapi.repository.PremadePizzaRepository;
 import com.awesomepizza.awesomepizzaapi.service.OrderService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +22,59 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
 
+    private final PizzaComboRepository pizzaComboRepository;
+
+    private final PremadePizzaRepository premadePizzaRepository;
+
+    private final IngredientRepository ingredientRepository;
+
+    private final ModelMapper modelMapper;
+
+
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, ModelMapper modelMapper, PizzaComboRepository pizzaComboRepository,
+                            PremadePizzaRepository premadePizzaRepository, IngredientRepository ingredientRepository) {
         this.orderRepository = orderRepository;
+        this.modelMapper = modelMapper;
+        this.pizzaComboRepository = pizzaComboRepository;
+        this.premadePizzaRepository = premadePizzaRepository;
+        this.ingredientRepository = ingredientRepository;
     }
 
     @Override
-    public Order save(Order entity) {
-        entity.setOrderStatus(OrderStatus.PLACED);
-        entity.setTimestamp(LocalDateTime.now());
-        return orderRepository.save(entity);
+    public OrderDTO save(OrderDTO entity) {
+        Order order = modelMapper.map(entity, Order.class);
+
+        order.setId(null);
+        order.setOrderStatus(OrderStatus.PLACED);
+        order.setTimestamp(LocalDateTime.now());
+
+        for (PizzaCombo pizzaCombo : order.getPizzaComboList()) {
+            pizzaCombo.setPremadePizza(this.premadePizzaRepository.findById(pizzaCombo.getPremadePizza().getId()).get());
+            pizzaCombo.setPrice(calculatePizzaComboPrice(pizzaCombo));
+            pizzaComboRepository.save(pizzaCombo);
+        }
+        order.setPrice(calculateOrderPrice(order));
+        order = orderRepository.save(order);
+        OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
+
+        return orderDTO;
+    }
+
+    private Double calculatePizzaComboPrice(PizzaCombo pizzaCombo) {
+        Double price = 0D;
+        for (Ingredient ingredient : pizzaCombo.getExtras())
+            price += ingredientRepository.findById(ingredient.getId()).get().getPrice();
+        price += pizzaCombo.getPremadePizza().getPrice();
+        price *= pizzaCombo.getPizzaSize().getPriceMultiplier();
+        return price;
+    }
+
+    private Double calculateOrderPrice(Order order) {
+        Double price = 0D;
+        for (PizzaCombo pizzaCombo : order.getPizzaComboList())
+            price += pizzaCombo.getPrice();
+        return price;
     }
 
     @Override
