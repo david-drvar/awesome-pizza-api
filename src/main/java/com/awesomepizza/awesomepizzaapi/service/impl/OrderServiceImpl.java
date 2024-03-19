@@ -5,11 +5,11 @@ import com.awesomepizza.awesomepizzaapi.model.Ingredient;
 import com.awesomepizza.awesomepizzaapi.model.Order;
 import com.awesomepizza.awesomepizzaapi.model.OrderStatus;
 import com.awesomepizza.awesomepizzaapi.model.PizzaCombo;
-import com.awesomepizza.awesomepizzaapi.repository.IngredientRepository;
 import com.awesomepizza.awesomepizzaapi.repository.OrderRepository;
-import com.awesomepizza.awesomepizzaapi.repository.PizzaComboRepository;
-import com.awesomepizza.awesomepizzaapi.repository.PremadePizzaRepository;
+import com.awesomepizza.awesomepizzaapi.service.IngredientService;
 import com.awesomepizza.awesomepizzaapi.service.OrderService;
+import com.awesomepizza.awesomepizzaapi.service.PizzaComboService;
+import com.awesomepizza.awesomepizzaapi.service.PremadePizzaService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,23 +22,23 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
 
-    private final PizzaComboRepository pizzaComboRepository;
+    private final PizzaComboService pizzaComboService;
 
-    private final PremadePizzaRepository premadePizzaRepository;
+    private final PremadePizzaService premadePizzaService;
 
-    private final IngredientRepository ingredientRepository;
+    private final IngredientService ingredientService;
 
     private final ModelMapper modelMapper;
 
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, ModelMapper modelMapper, PizzaComboRepository pizzaComboRepository,
-                            PremadePizzaRepository premadePizzaRepository, IngredientRepository ingredientRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository, ModelMapper modelMapper, PizzaComboService pizzaComboService,
+                            PremadePizzaService premadePizzaService, IngredientService ingredientService) {
         this.orderRepository = orderRepository;
         this.modelMapper = modelMapper;
-        this.pizzaComboRepository = pizzaComboRepository;
-        this.premadePizzaRepository = premadePizzaRepository;
-        this.ingredientRepository = ingredientRepository;
+        this.pizzaComboService = pizzaComboService;
+        this.premadePizzaService = premadePizzaService;
+        this.ingredientService = ingredientService;
     }
 
     @Override
@@ -50,12 +50,12 @@ public class OrderServiceImpl implements OrderService {
         order.setTimestamp(LocalDateTime.now());
 
         for (PizzaCombo pizzaCombo : order.getPizzaComboList()) {
-            pizzaCombo.setPremadePizza(this.premadePizzaRepository.findById(pizzaCombo.getPremadePizza().getId()).get());
+            pizzaCombo.setPremadePizza(this.premadePizzaService.read(pizzaCombo.getPremadePizza().getId()).get());
             pizzaCombo.setPrice(calculatePizzaComboPrice(pizzaCombo));
-            pizzaComboRepository.save(pizzaCombo);
+            this.pizzaComboService.save(pizzaCombo);
         }
         order.setPrice(calculateOrderPrice(order));
-        order = orderRepository.save(order);
+        order = this.orderRepository.save(order);
         OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
 
         return orderDTO;
@@ -64,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
     private Double calculatePizzaComboPrice(PizzaCombo pizzaCombo) {
         Double price = 0D;
         for (Ingredient ingredient : pizzaCombo.getExtras())
-            price += ingredientRepository.findById(ingredient.getId()).get().getPrice();
+            price += this.ingredientService.read(ingredient.getId()).get().getPrice();
         price += pizzaCombo.getPremadePizza().getPrice();
         price *= pizzaCombo.getPizzaSize().getPriceMultiplier();
         return price;
@@ -79,22 +79,22 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Collection<Order> read() {
-        return orderRepository.findAll();
+        return this.orderRepository.findAll();
     }
 
     @Override
     public Optional<Order> read(Long id) {
-        return orderRepository.findById(id);
+        return this.orderRepository.findById(id);
     }
 
     @Override
     public void delete(Long id) {
-        orderRepository.deleteById(id);
+        this.orderRepository.deleteById(id);
     }
 
     @Override
     public boolean existsById(Long id) {
-        return orderRepository.existsById(id);
+        return this.orderRepository.existsById(id);
     }
 
     @Override
@@ -108,11 +108,11 @@ public class OrderServiceImpl implements OrderService {
         //check if there is one that is preparing
         //if there is, you cannot take next order
         //only when the previous one is ready you can take
-        Optional<Order> firstPlacedOrder = orderRepository.findFirstByOrderStatusOrderByTimestampAsc(OrderStatus.PLACED);
+        Optional<Order> firstPlacedOrder = this.orderRepository.findFirstByOrderStatusOrderByTimestampAsc(OrderStatus.PLACED);
         if (firstPlacedOrder.isEmpty())
             return null; //todo there is no more placed orders, that is okay as well
 
-        Optional<Order> previousOrder = orderRepository.findFirstByTimestampBeforeOrderByTimestampDesc(firstPlacedOrder.get().getTimestamp());
+        Optional<Order> previousOrder = this.orderRepository.findFirstByTimestampBeforeOrderByTimestampDesc(firstPlacedOrder.get().getTimestamp());
         if (previousOrder.isEmpty())
             return firstPlacedOrder.get(); //todo that is okay also because it can be the first order ever which doesnt have a previousone
 
@@ -124,15 +124,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order startOrder() {
         //find oldest placed order
-        Optional<Order> firstPlacedOrder = orderRepository.findFirstByOrderStatusOrderByTimestampAsc(OrderStatus.PLACED);
+        Optional<Order> firstPlacedOrder = this.orderRepository.findFirstByOrderStatusOrderByTimestampAsc(OrderStatus.PLACED);
         if (firstPlacedOrder.isEmpty())
             return null;
 
         //check if the one before that one is completed
-        Optional<Order> previousOrder = orderRepository.findFirstByTimestampBeforeOrderByTimestampDesc(firstPlacedOrder.get().getTimestamp());
+        Optional<Order> previousOrder = this.orderRepository.findFirstByTimestampBeforeOrderByTimestampDesc(firstPlacedOrder.get().getTimestamp());
         if (previousOrder.isEmpty()) {
             firstPlacedOrder.get().setOrderStatus(OrderStatus.PREPARING);
-            orderRepository.save(firstPlacedOrder.get());
+            this.orderRepository.save(firstPlacedOrder.get());
             return firstPlacedOrder.get(); //todo fix this, is empty is also okay when it is the first order ever, it wont have previous one
         }
 
@@ -140,21 +140,21 @@ public class OrderServiceImpl implements OrderService {
             return null; //todo return error saying that the previous order has to be finished first
 
         firstPlacedOrder.get().setOrderStatus(OrderStatus.PREPARING);
-        orderRepository.save(firstPlacedOrder.get());
+        this.orderRepository.save(firstPlacedOrder.get());
         return firstPlacedOrder.get();
     }
 
     @Override
     public Order finishOrder() {
-        Optional<Order> firstPlacedOrder = orderRepository.findFirstByOrderStatusOrderByTimestampAsc(OrderStatus.PREPARING);
+        Optional<Order> firstPlacedOrder = this.orderRepository.findFirstByOrderStatusOrderByTimestampAsc(OrderStatus.PREPARING);
         if (firstPlacedOrder.isEmpty())
             return null;
 
         //check if the one before that one is completed
-        Optional<Order> previousOrder = orderRepository.findFirstByTimestampBeforeOrderByTimestampDesc(firstPlacedOrder.get().getTimestamp());
+        Optional<Order> previousOrder = this.orderRepository.findFirstByTimestampBeforeOrderByTimestampDesc(firstPlacedOrder.get().getTimestamp());
         if (previousOrder.isEmpty()) {
             firstPlacedOrder.get().setOrderStatus(OrderStatus.READY);
-            orderRepository.save(firstPlacedOrder.get());
+            this.orderRepository.save(firstPlacedOrder.get());
             return firstPlacedOrder.get(); //todo fix this, is empty is also okay when it is the first order ever, it wont have previous one
         }
 
@@ -162,7 +162,7 @@ public class OrderServiceImpl implements OrderService {
             return null; //todo return error saying that the previous order has to be finished first
 
         firstPlacedOrder.get().setOrderStatus(OrderStatus.READY);
-        orderRepository.save(firstPlacedOrder.get());
+        this.orderRepository.save(firstPlacedOrder.get());
         return firstPlacedOrder.get();
     }
 }
