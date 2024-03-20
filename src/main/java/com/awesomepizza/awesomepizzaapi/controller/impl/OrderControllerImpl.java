@@ -70,7 +70,7 @@ public class OrderControllerImpl implements OrderController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (!orderService.existsById(id))
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         orderService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -90,8 +90,6 @@ public class OrderControllerImpl implements OrderController {
     @PreAuthorize("hasRole('PIZZAMAKER')")
     public ResponseEntity<OrderDTO> getNextOrder() {
         Order order = orderService.getNextOrder();
-        if (order == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //todo can be empty as well
         OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
         return new ResponseEntity<>(orderDTO, HttpStatus.OK);
     }
@@ -101,8 +99,6 @@ public class OrderControllerImpl implements OrderController {
     @PreAuthorize("hasRole('PIZZAMAKER')")
     public ResponseEntity<OrderDTO> startOrder() {
         Order order = orderService.startOrder();
-        if (order == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //todo can be empty as well
         OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
         return new ResponseEntity<>(orderDTO, HttpStatus.OK);
     }
@@ -112,8 +108,6 @@ public class OrderControllerImpl implements OrderController {
     @PreAuthorize("hasRole('PIZZAMAKER')")
     public ResponseEntity<OrderDTO> finishOrder() {
         Order order = orderService.finishOrder();
-        if (order == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); //todo can be empty as well
         OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
         return new ResponseEntity<>(orderDTO, HttpStatus.OK);
     }

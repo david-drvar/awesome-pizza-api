@@ -1,10 +1,13 @@
 package com.awesomepizza.awesomepizzaapi.service.impl;
 
 import com.awesomepizza.awesomepizzaapi.dto.OrderDTO;
+import com.awesomepizza.awesomepizzaapi.exception.NoOrdersPlacedException;
+import com.awesomepizza.awesomepizzaapi.exception.OrderQueueException;
+import com.awesomepizza.awesomepizzaapi.exception.ResourceNotFoundException;
 import com.awesomepizza.awesomepizzaapi.model.Ingredient;
 import com.awesomepizza.awesomepizzaapi.model.Order;
-import com.awesomepizza.awesomepizzaapi.model.enums.OrderStatus;
 import com.awesomepizza.awesomepizzaapi.model.PizzaCombo;
+import com.awesomepizza.awesomepizzaapi.model.enums.OrderStatus;
 import com.awesomepizza.awesomepizzaapi.repository.OrderRepository;
 import com.awesomepizza.awesomepizzaapi.service.IngredientService;
 import com.awesomepizza.awesomepizzaapi.service.OrderService;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Optional;
+
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -50,21 +54,22 @@ public class OrderServiceImpl implements OrderService {
         order.setTimestamp(LocalDateTime.now());
 
         for (PizzaCombo pizzaCombo : order.getPizzaComboList()) {
-            pizzaCombo.setPremadePizza(this.premadePizzaService.read(pizzaCombo.getPremadePizza().getId()).get());
+            pizzaCombo.setPremadePizza(this.premadePizzaService.read(pizzaCombo.getPremadePizza().getId()).orElseThrow(
+                    () -> new ResourceNotFoundException("cannot find premade pizza with id " + pizzaCombo.getPremadePizza().getId())));
             pizzaCombo.setPrice(calculatePizzaComboPrice(pizzaCombo));
             this.pizzaComboService.save(pizzaCombo);
         }
         order.setPrice(calculateOrderPrice(order));
         order = this.orderRepository.save(order);
-        OrderDTO orderDTO = modelMapper.map(order, OrderDTO.class);
 
-        return orderDTO;
+        return modelMapper.map(order, OrderDTO.class);
     }
 
     private Double calculatePizzaComboPrice(PizzaCombo pizzaCombo) {
         Double price = 0D;
         for (Ingredient ingredient : pizzaCombo.getExtras())
-            price += this.ingredientService.read(ingredient.getId()).get().getPrice();
+            price += this.ingredientService.read(ingredient.getId()).orElseThrow(
+                    () -> new ResourceNotFoundException("cannot find ingredient with id " + ingredient.getId())).getPrice();
         price += pizzaCombo.getPremadePizza().getPrice();
         price *= pizzaCombo.getPizzaSize().getPriceMultiplier();
         return price;
@@ -106,18 +111,19 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getNextOrder() {
         //check if there is one that is preparing
-        //if there is, you cannot take next order
-        //only when the previous one is ready you can take
+        //if there is, you cannot take the next order
+        //only when the previous one is ready you can take it
+
         Optional<Order> firstPlacedOrder = this.orderRepository.findFirstByOrderStatusOrderByTimestampAsc(OrderStatus.PLACED);
         if (firstPlacedOrder.isEmpty())
-            return null; //todo there is no more placed orders, that is okay as well
+            throw new NoOrdersPlacedException("There are no any placed orders left");
 
         Optional<Order> previousOrder = this.orderRepository.findFirstByTimestampBeforeOrderByTimestampDesc(firstPlacedOrder.get().getTimestamp());
         if (previousOrder.isEmpty())
-            return firstPlacedOrder.get(); // first order won't have previous one
+            return firstPlacedOrder.get();
 
         if (previousOrder.get().getOrderStatus() != OrderStatus.READY)
-            return null; //todo error
+            throw new OrderQueueException("Previous order is not ready yet. Cannot view the next one.");
         return firstPlacedOrder.get();
     }
 
@@ -126,18 +132,18 @@ public class OrderServiceImpl implements OrderService {
         //find oldest placed order
         Optional<Order> firstPlacedOrder = this.orderRepository.findFirstByOrderStatusOrderByTimestampAsc(OrderStatus.PLACED);
         if (firstPlacedOrder.isEmpty())
-            return null;
+            throw new NoOrdersPlacedException("There are no any placed orders to start.");
 
         //check if the one before that one is completed
         Optional<Order> previousOrder = this.orderRepository.findFirstByTimestampBeforeOrderByTimestampDesc(firstPlacedOrder.get().getTimestamp());
         if (previousOrder.isEmpty()) {
             firstPlacedOrder.get().setOrderStatus(OrderStatus.PREPARING);
             this.orderRepository.save(firstPlacedOrder.get());
-            return firstPlacedOrder.get(); // first order won't have previous one
+            return firstPlacedOrder.get(); // first order won't have a previous one
         }
 
         if (previousOrder.get().getOrderStatus() != OrderStatus.READY)
-            return null; //todo return error saying that the previous order has to be finished first
+            throw new OrderQueueException("Previous order is not ready yet. Cannot start the next one.");
 
         firstPlacedOrder.get().setOrderStatus(OrderStatus.PREPARING);
         this.orderRepository.save(firstPlacedOrder.get());
@@ -148,18 +154,18 @@ public class OrderServiceImpl implements OrderService {
     public Order finishOrder() {
         Optional<Order> firstPlacedOrder = this.orderRepository.findFirstByOrderStatusOrderByTimestampAsc(OrderStatus.PREPARING);
         if (firstPlacedOrder.isEmpty())
-            return null;
+            throw new NoOrdersPlacedException("There is no preparing order.");
 
-        //check if the one before that one is completed
+        //check if the order before that one is completed
         Optional<Order> previousOrder = this.orderRepository.findFirstByTimestampBeforeOrderByTimestampDesc(firstPlacedOrder.get().getTimestamp());
-        if (previousOrder.isEmpty()) { // first order won't have previous one
+        if (previousOrder.isEmpty()) { // first order won't have a previous one
             firstPlacedOrder.get().setOrderStatus(OrderStatus.READY);
             this.orderRepository.save(firstPlacedOrder.get());
             return firstPlacedOrder.get();
         }
 
         if (previousOrder.get().getOrderStatus() != OrderStatus.READY)
-            return null; //todo return error saying that the previous order has to be finished first
+            throw new OrderQueueException("Previous order is not ready yet. Cannot finish the next one.");
 
         firstPlacedOrder.get().setOrderStatus(OrderStatus.READY);
         this.orderRepository.save(firstPlacedOrder.get());
