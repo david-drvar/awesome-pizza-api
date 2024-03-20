@@ -3,7 +3,7 @@ package com.awesomepizza.awesomepizzaapi.controller.impl;
 import com.awesomepizza.awesomepizzaapi.controller.OrderController;
 import com.awesomepizza.awesomepizzaapi.dto.OrderDTO;
 import com.awesomepizza.awesomepizzaapi.model.Order;
-import com.awesomepizza.awesomepizzaapi.model.OrderStatus;
+import com.awesomepizza.awesomepizzaapi.model.enums.OrderStatus;
 import com.awesomepizza.awesomepizzaapi.service.OrderService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

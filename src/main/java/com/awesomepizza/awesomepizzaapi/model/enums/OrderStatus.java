@@ -1,4 +1,4 @@
-package com.awesomepizza.awesomepizzaapi.model;
+package com.awesomepizza.awesomepizzaapi.model.enums;
 
 public enum OrderStatus {
     PLACED,

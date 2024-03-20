@@ -3,7 +3,7 @@ package com.awesomepizza.awesomepizzaapi.service.impl;
 import com.awesomepizza.awesomepizzaapi.dto.OrderDTO;
 import com.awesomepizza.awesomepizzaapi.model.Ingredient;
 import com.awesomepizza.awesomepizzaapi.model.Order;
-import com.awesomepizza.awesomepizzaapi.model.OrderStatus;
+import com.awesomepizza.awesomepizzaapi.model.enums.OrderStatus;
 import com.awesomepizza.awesomepizzaapi.model.PizzaCombo;
 import com.awesomepizza.awesomepizzaapi.repository.OrderRepository;
 import com.awesomepizza.awesomepizzaapi.service.IngredientService;
@@ -114,7 +114,7 @@ public class OrderServiceImpl implements OrderService {
 
         Optional<Order> previousOrder = this.orderRepository.findFirstByTimestampBeforeOrderByTimestampDesc(firstPlacedOrder.get().getTimestamp());
         if (previousOrder.isEmpty())
-            return firstPlacedOrder.get(); //todo that is okay also because it can be the first order ever which doesnt have a previousone
+            return firstPlacedOrder.get(); // first order won't have previous one
 
         if (previousOrder.get().getOrderStatus() != OrderStatus.READY)
             return null; //todo error
@@ -133,7 +133,7 @@ public class OrderServiceImpl implements OrderService {
         if (previousOrder.isEmpty()) {
             firstPlacedOrder.get().setOrderStatus(OrderStatus.PREPARING);
             this.orderRepository.save(firstPlacedOrder.get());
-            return firstPlacedOrder.get(); //todo fix this, is empty is also okay when it is the first order ever, it wont have previous one
+            return firstPlacedOrder.get(); // first order won't have previous one
         }
 
         if (previousOrder.get().getOrderStatus() != OrderStatus.READY)
@@ -152,10 +152,10 @@ public class OrderServiceImpl implements OrderService {
 
         //check if the one before that one is completed
         Optional<Order> previousOrder = this.orderRepository.findFirstByTimestampBeforeOrderByTimestampDesc(firstPlacedOrder.get().getTimestamp());
-        if (previousOrder.isEmpty()) {
+        if (previousOrder.isEmpty()) { // first order won't have previous one
             firstPlacedOrder.get().setOrderStatus(OrderStatus.READY);
             this.orderRepository.save(firstPlacedOrder.get());
-            return firstPlacedOrder.get(); //todo fix this, is empty is also okay when it is the first order ever, it wont have previous one
+            return firstPlacedOrder.get();
         }
 
         if (previousOrder.get().getOrderStatus() != OrderStatus.READY)

@@ -2,7 +2,7 @@ package com.awesomepizza.awesomepizzaapi.service;
 
 import com.awesomepizza.awesomepizzaapi.dto.OrderDTO;
 import com.awesomepizza.awesomepizzaapi.model.Order;
-import com.awesomepizza.awesomepizzaapi.model.OrderStatus;
+import com.awesomepizza.awesomepizzaapi.model.enums.OrderStatus;
 
 import java.util.Collection;
 import java.util.Optional;

@@ -1,5 +1,6 @@
 package com.awesomepizza.awesomepizzaapi.model;
 
+import com.awesomepizza.awesomepizzaapi.model.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;

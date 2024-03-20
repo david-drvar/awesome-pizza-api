@@ -1,7 +1,7 @@
 package com.awesomepizza.awesomepizzaapi.controller;
 
 import com.awesomepizza.awesomepizzaapi.dto.OrderDTO;
-import com.awesomepizza.awesomepizzaapi.model.OrderStatus;
+import com.awesomepizza.awesomepizzaapi.model.enums.OrderStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Collection;

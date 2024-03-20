@@ -1,5 +1,6 @@
 package com.awesomepizza.awesomepizzaapi.model;
 
+import com.awesomepizza.awesomepizzaapi.model.enums.PizzaSize;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

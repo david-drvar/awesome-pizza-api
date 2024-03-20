@@ -1,6 +1,6 @@
 package com.awesomepizza.awesomepizzaapi.dto;
 
-import com.awesomepizza.awesomepizzaapi.model.PizzaSize;
+import com.awesomepizza.awesomepizzaapi.model.enums.PizzaSize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
