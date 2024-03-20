@@ -103,3 +103,9 @@ VALUES (1, 1),
        (8, 4),
        (9, 4),
        (10, 5);
+
+
+-- Populate 'user' table
+INSERT INTO users (login, password, role)
+VALUES ('admin', '$2a$10$xaqBrGvBd/lj0dr8j.KjTeN7V0JsCFn8fZx2rwiMaVui.k4JlmWgG', 'ADMIN'),
+       ('pizzamaker', '$2a$10$xaqBrGvBd/lj0dr8j.KjTeN7V0JsCFn8fZx2rwiMaVui.k4JlmWgG', 'PIZZAMAKER');

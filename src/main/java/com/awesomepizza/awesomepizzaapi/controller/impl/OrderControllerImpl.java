@@ -5,17 +5,19 @@ import com.awesomepizza.awesomepizzaapi.dto.OrderDTO;
 import com.awesomepizza.awesomepizzaapi.model.Order;
 import com.awesomepizza.awesomepizzaapi.model.enums.OrderStatus;
 import com.awesomepizza.awesomepizzaapi.service.OrderService;
+import jakarta.annotation.security.PermitAll;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(value = "api/order")
+@RequestMapping(value = "/api/order")
 public class OrderControllerImpl implements OrderController {
 
     private final OrderService orderService;
@@ -30,12 +32,14 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @PostMapping(consumes = "application/json")
+    @PermitAll
     public ResponseEntity<OrderDTO> save(@RequestBody OrderDTO entity) {
         return new ResponseEntity<>(orderService.save(entity), HttpStatus.CREATED);
     }
 
     @Override
     @PutMapping(value = "/update")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderDTO> update(@RequestBody OrderDTO entity) {
         if(!orderService.existsById(entity.getId()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -44,6 +48,7 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @GetMapping(value = "/get-all")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Collection<OrderDTO>> read() {
 
         Collection<Order> orders = orderService.read();
@@ -55,12 +60,14 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderDTO> read(@PathVariable Long id) {
         return new ResponseEntity<>(modelMapper.map(orderService.read(id), OrderDTO.class), HttpStatus.OK);
     }
 
     @Override
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (!orderService.existsById(id))
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -70,6 +77,7 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @GetMapping(value = "/get-order-status/{id}")
+    @PermitAll
     public ResponseEntity<OrderStatus> getOrderStatus(@PathVariable Long id) {
         OrderStatus status;
         if ((status = orderService.getOrderStatus(id)) == null)
@@ -79,6 +87,7 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @GetMapping(value = "/next-order")
+    @PreAuthorize("hasRole('PIZZAMAKER')")
     public ResponseEntity<OrderDTO> getNextOrder() {
         Order order = orderService.getNextOrder();
         if (order == null)
@@ -89,6 +98,7 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @PutMapping(value = "/start-order")
+    @PreAuthorize("hasRole('PIZZAMAKER')")
     public ResponseEntity<OrderDTO> startOrder() {
         Order order = orderService.startOrder();
         if (order == null)
@@ -99,6 +109,7 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @PutMapping(value = "/finish-order")
+    @PreAuthorize("hasRole('PIZZAMAKER')")
     public ResponseEntity<OrderDTO> finishOrder() {
         Order order = orderService.finishOrder();
         if (order == null)
