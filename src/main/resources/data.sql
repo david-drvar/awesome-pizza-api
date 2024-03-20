@@ -51,19 +51,28 @@ VALUES (15.99, 1, 'LARGE'),
        (17.99, 10, 'LARGE');
 
 -- Populate 'pizza_orders' table
-INSERT INTO pizza_orders (timestamp, address, customer_name, customer_surname, order_status, phone_number, price)
-VALUES (CURRENT_TIMESTAMP + INTERVAL '1' SECOND, '123 Main St', 'John', 'Doe', 'PLACED', '123-456-7890', 100),
-       (CURRENT_TIMESTAMP + INTERVAL '2' SECOND, '456 Elm St', 'Jane', 'Smith', 'PLACED', '456-789-0123', 100),
-       (CURRENT_TIMESTAMP + INTERVAL '3' SECOND, '789 Oak St', 'Michael', 'Johnson', 'PLACED', '789-012-3456', 100),
-       (CURRENT_TIMESTAMP + INTERVAL '4' SECOND, '321 Pine St', 'Emily', 'Brown', 'PLACED', '987-654-3210', 100),
-       (CURRENT_TIMESTAMP + INTERVAL '5' SECOND, '654 Maple St', 'David', 'Taylor', 'PLACED', '654-321-0987', 100),
-       (CURRENT_TIMESTAMP + INTERVAL '6' SECOND, '987 Cedar St', 'Sarah', 'Anderson', 'PLACED', '321-098-7654', 100),
-       (CURRENT_TIMESTAMP + INTERVAL '7' SECOND, '159 Birch St', 'Ryan', 'Wilson', 'PLACED', '012-345-6789', 100),
-       (CURRENT_TIMESTAMP + INTERVAL '8' SECOND, '753 Walnut St', 'Jessica', 'Martinez', 'PLACED', '234-567-8901', 100),
-       (CURRENT_TIMESTAMP + INTERVAL '9' SECOND, '852 Spruce St', 'Christopher', 'Garcia', 'PLACED', '345-678-9012',
-        100),
-       (CURRENT_TIMESTAMP + INTERVAL '10' SECOND, '369 Cherry St', 'Amanda', 'Hernandez', 'PLACED', '456-789-0123',
-        100);
+INSERT INTO pizza_orders (timestamp, street, customer_name, customer_surname, order_status, phone_number, price, town,
+                          zip)
+VALUES (CURRENT_TIMESTAMP + INTERVAL '1' SECOND, '123 Main St', 'John', 'Doe', 'PLACED', '+39 123 344 4567', 100,
+        'Milano', '20063'),
+       (CURRENT_TIMESTAMP + INTERVAL '2' SECOND, '456 Elm St', 'Jane', 'Smith', 'PLACED', '+39 123 344 4567', 100,
+        'Milano', '20063'),
+       (CURRENT_TIMESTAMP + INTERVAL '3' SECOND, '789 Oak St', 'Michael', 'Johnson', 'PLACED', '+39 123 344 4567', 100,
+        'Milano', '20063'),
+       (CURRENT_TIMESTAMP + INTERVAL '4' SECOND, '321 Pine St', 'Emily', 'Brown', 'PLACED', '+39 123 323 4567', 100,
+        'Milano', '20063'),
+       (CURRENT_TIMESTAMP + INTERVAL '5' SECOND, '654 Maple St', 'David', 'Taylor', 'PLACED', '+39 123 342 4567', 100,
+        'Milano', '20063'),
+       (CURRENT_TIMESTAMP + INTERVAL '6' SECOND, '987 Cedar St', 'Sarah', 'Anderson', 'PLACED', '+39 123 233 4567', 100,
+        'Milano', '20063'),
+       (CURRENT_TIMESTAMP + INTERVAL '7' SECOND, '159 Birch St', 'Ryan', 'Wilson', 'PLACED', '+39 123 123 4567', 100,
+        'Milano', '20063'),
+       (CURRENT_TIMESTAMP + INTERVAL '8' SECOND, '753 Walnut St', 'Jessica', 'Martinez', 'PLACED', '+39 123 123 4567',
+        100, 'Milano', '20063'),
+       (CURRENT_TIMESTAMP + INTERVAL '9' SECOND, '852 Spruce St', 'Christopher', 'Garcia', 'PLACED', '+39 123 123 4567',
+        100, 'Milano', '20063'),
+       (CURRENT_TIMESTAMP + INTERVAL '10' SECOND, '369 Cherry St', 'Amanda', 'Hernandez', 'PLACED', '+39 123 123 4567',
+        100, 'Milano', '20063');
 
 -- Populate 'order_pizzacombo' table
 INSERT INTO order_pizzacombo (order_id, pizzacombo_id)

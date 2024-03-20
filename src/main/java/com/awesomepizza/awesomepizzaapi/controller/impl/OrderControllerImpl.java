@@ -6,6 +6,7 @@ import com.awesomepizza.awesomepizzaapi.model.Order;
 import com.awesomepizza.awesomepizzaapi.model.enums.OrderStatus;
 import com.awesomepizza.awesomepizzaapi.service.OrderService;
 import jakarta.annotation.security.PermitAll;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,14 +34,14 @@ public class OrderControllerImpl implements OrderController {
     @Override
     @PostMapping(consumes = "application/json")
     @PermitAll
-    public ResponseEntity<OrderDTO> save(@RequestBody OrderDTO entity) {
+    public ResponseEntity<OrderDTO> save(@Valid @RequestBody OrderDTO entity) {
         return new ResponseEntity<>(orderService.save(entity), HttpStatus.CREATED);
     }
 
     @Override
     @PutMapping(value = "/update")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OrderDTO> update(@RequestBody OrderDTO entity) {
+    public ResponseEntity<OrderDTO> update(@Valid @RequestBody OrderDTO entity) {
         if(!orderService.existsById(entity.getId()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(orderService.save(entity), HttpStatus.CREATED);

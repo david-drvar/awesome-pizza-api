@@ -2,6 +2,8 @@ package com.awesomepizza.awesomepizzaapi.model;
 
 import com.awesomepizza.awesomepizzaapi.model.enums.UserRole;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,12 +26,13 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @NotEmpty(message = "user login must not be null")
     private String login;
 
-    @Column
+    @NotEmpty(message = "user password must not be null")
     private String password;
 
+    @NotNull(message = "user role must not be null")
     @Enumerated(EnumType.STRING)
     private UserRole role;
 

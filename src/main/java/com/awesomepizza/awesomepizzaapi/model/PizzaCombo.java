@@ -2,6 +2,8 @@ package com.awesomepizza.awesomepizzaapi.model;
 
 import com.awesomepizza.awesomepizzaapi.model.enums.PizzaSize;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,10 +20,13 @@ public class PizzaCombo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Valid
+    @NotNull(message = "premade pizza must not be null")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "premadePizza_id")
     private PremadePizza premadePizza;
 
+    @NotNull(message = "pizza size must not be null")
     @Enumerated(EnumType.STRING)
     private PizzaSize pizzaSize;
 
@@ -34,6 +39,6 @@ public class PizzaCombo {
     @ManyToMany(mappedBy = "pizzaComboList", fetch = FetchType.LAZY)
     private List<Order> orders;
 
-    @Column
+    @NotNull(message = "pizza combo price must not be null")
     private Double price;
 }

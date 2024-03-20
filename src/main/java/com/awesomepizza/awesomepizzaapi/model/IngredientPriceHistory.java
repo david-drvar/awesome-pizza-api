@@ -1,6 +1,7 @@
 package com.awesomepizza.awesomepizzaapi.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,10 +18,10 @@ public class IngredientPriceHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @NotNull(message = "ingredient price must not be null")
     private Double price;
 
-    @Column
+    @NotNull(message = "price start date must not be null")
     private LocalDateTime dateStart;
 
     @ManyToOne(fetch = FetchType.LAZY)

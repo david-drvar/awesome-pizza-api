@@ -67,9 +67,12 @@ public class OrderServiceImpl implements OrderService {
 
     private Double calculatePizzaComboPrice(PizzaCombo pizzaCombo) {
         Double price = 0D;
-        for (Ingredient ingredient : pizzaCombo.getExtras())
-            price += this.ingredientService.read(ingredient.getId()).orElseThrow(
-                    () -> new ResourceNotFoundException("cannot find ingredient with id " + ingredient.getId())).getPrice();
+        if (pizzaCombo.getExtras() != null) {
+            for (Ingredient ingredient : pizzaCombo.getExtras())
+                price += this.ingredientService.read(ingredient.getId()).orElseThrow(
+                        () -> new ResourceNotFoundException("cannot find ingredient with id " + ingredient.getId())).getPrice();
+        }
+
         price += pizzaCombo.getPremadePizza().getPrice();
         price *= pizzaCombo.getPizzaSize().getPriceMultiplier();
         return price;

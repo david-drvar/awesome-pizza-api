@@ -1,6 +1,8 @@
 package com.awesomepizza.awesomepizzaapi.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,9 +19,10 @@ public class Ingredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @NotEmpty(message = "ingredient name must not be empty")
     private String name;
 
+    @NotEmpty(message = "ingredient's price history must not be empty")
     @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
     private List<IngredientPriceHistory> ingredientPriceHistory;
 
@@ -29,6 +32,6 @@ public class Ingredient {
     @ManyToMany(mappedBy = "ingredientList", fetch = FetchType.LAZY)
     private List<PremadePizza> premadePizzas;
 
-    @Column
+    @NotNull(message = "ingredient's price must not be null")
     private Double price;
 }

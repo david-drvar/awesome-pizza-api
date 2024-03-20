@@ -1,6 +1,7 @@
 package com.awesomepizza.awesomepizzaapi.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +18,7 @@ public class PremadePizza {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @NotNull(message = "premade pizza name must not be null")
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -29,7 +30,7 @@ public class PremadePizza {
     @OneToMany(mappedBy = "premadePizza", fetch = FetchType.LAZY)
     private List<PizzaCombo> pizzaCombos;
 
-    @Column
+    @NotNull(message = "premade pizza price must not be null")
     private Double price;
 
 }
