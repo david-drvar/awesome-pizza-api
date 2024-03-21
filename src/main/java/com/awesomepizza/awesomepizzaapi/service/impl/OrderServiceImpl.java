@@ -2,6 +2,7 @@ package com.awesomepizza.awesomepizzaapi.service.impl;
 
 import com.awesomepizza.awesomepizzaapi.dto.OrderDTO;
 import com.awesomepizza.awesomepizzaapi.exception.NoOrdersPlacedException;
+import com.awesomepizza.awesomepizzaapi.exception.OrderModificationException;
 import com.awesomepizza.awesomepizzaapi.exception.OrderQueueException;
 import com.awesomepizza.awesomepizzaapi.exception.ResourceNotFoundException;
 import com.awesomepizza.awesomepizzaapi.model.Ingredient;
@@ -98,6 +99,10 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void delete(Long id) {
+        Order order = this.orderRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("cannot find order with id " + id));
+        if (order.getOrderStatus() != OrderStatus.PLACED)
+            throw new OrderModificationException("cannot delete order that is preparing or ready");
         this.orderRepository.deleteById(id);
     }
 

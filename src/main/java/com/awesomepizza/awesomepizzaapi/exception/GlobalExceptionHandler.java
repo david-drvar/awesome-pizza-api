@@ -29,14 +29,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoOrdersPlacedException.class)
     public ResponseEntity<?> handleNoOrdersPlacedException(NoOrdersPlacedException ex, WebRequest ignoredRequest) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.OK, ex.getMessage());
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.OK);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UsernameExistsException.class)
     public ResponseEntity<?> handleUsernameExistsException(UsernameExistsException ex, WebRequest ignoredRequest) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.OK, ex.getMessage());
-        return new ResponseEntity<>(exceptionResponse, HttpStatus.OK);
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OrderModificationException.class)
+    public ResponseEntity<?> handleOrderModificationException(OrderModificationException ex, WebRequest ignoredRequest) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

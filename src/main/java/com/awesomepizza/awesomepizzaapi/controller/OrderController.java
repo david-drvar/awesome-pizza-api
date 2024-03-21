@@ -10,8 +10,6 @@ public interface OrderController {
 
     ResponseEntity<OrderDTO> save(OrderDTO entity);
 
-    ResponseEntity<OrderDTO> update(OrderDTO entity);
-
     ResponseEntity<Collection<OrderDTO>> read();
 
     ResponseEntity<OrderDTO> read(Long id);

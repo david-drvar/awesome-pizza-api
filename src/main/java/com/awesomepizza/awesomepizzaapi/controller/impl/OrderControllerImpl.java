@@ -40,15 +40,6 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
-    @PutMapping(value = "/update")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OrderDTO> update(@Valid @RequestBody OrderDTO entity) {
-        if(!orderService.existsById(entity.getId()))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(orderService.save(entity), HttpStatus.CREATED);
-    }
-
-    @Override
     @GetMapping(value = "/get-all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Collection<OrderDTO>> read() {
@@ -71,10 +62,8 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     @DeleteMapping(value = "/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PermitAll
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (!orderService.existsById(id))
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         orderService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
