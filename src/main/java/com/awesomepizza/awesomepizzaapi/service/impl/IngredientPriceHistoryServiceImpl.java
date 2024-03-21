@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Service
-
 public class IngredientPriceHistoryServiceImpl implements IngredientPriceHistoryService {
 
     private final IngredientPriceHistoryRepository ingredientPriceHistoryRepository;

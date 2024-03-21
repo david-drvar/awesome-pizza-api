@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -51,7 +52,6 @@ public class OrderControllerImpl implements OrderController {
     @GetMapping(value = "/get-all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Collection<OrderDTO>> read() {
-
         Collection<Order> orders = orderService.read();
         Collection<OrderDTO> orderDTOs = orders.stream()
                 .map(order -> modelMapper.map(order, OrderDTO.class))
@@ -63,7 +63,10 @@ public class OrderControllerImpl implements OrderController {
     @GetMapping(value = "/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderDTO> read(@PathVariable Long id) {
-        return new ResponseEntity<>(modelMapper.map(orderService.read(id), OrderDTO.class), HttpStatus.OK);
+        Optional<Order> order = orderService.read(id);
+        if (order.isEmpty())
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(modelMapper.map(order, OrderDTO.class), HttpStatus.OK);
     }
 
     @Override

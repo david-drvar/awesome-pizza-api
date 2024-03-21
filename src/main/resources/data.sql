@@ -1,15 +1,15 @@
 -- Populate 'ingredient' table
 INSERT INTO ingredient (name, price)
-VALUES ('Tomato sauce', 1),
-       ('Mozzarella cheese', 2),
-       ('Pepperoni', 2),
-       ('Mushrooms', 2),
-       ('Onions', 1),
-       ('Green peppers', 3),
-       ('Olives', 2),
-       ('Bacon', 3),
-       ('Ham', 2),
-       ('Pineapple', 3);
+VALUES ('Tomato sauce', 1.5),
+       ('Mozzarella cheese', 2.0),
+       ('Pepperoni', 1.75),
+       ('Mushrooms', 1.25),
+       ('Onions', 1.0),
+       ('Green peppers', 1.0),
+       ('Olives', 1.25),
+       ('Bacon', 1.5),
+       ('Ham', 1.75),
+       ('Pineapple', 1.75);
 
 -- Populate 'ingredient_price_history' table
 INSERT INTO ingredient_price_history (price, date_start, ingredient_id)

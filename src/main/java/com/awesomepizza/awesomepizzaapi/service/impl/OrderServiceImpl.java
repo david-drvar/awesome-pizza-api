@@ -11,22 +11,21 @@ import com.awesomepizza.awesomepizzaapi.model.enums.OrderStatus;
 import com.awesomepizza.awesomepizzaapi.repository.OrderRepository;
 import com.awesomepizza.awesomepizzaapi.service.IngredientService;
 import com.awesomepizza.awesomepizzaapi.service.OrderService;
-import com.awesomepizza.awesomepizzaapi.service.PizzaComboService;
 import com.awesomepizza.awesomepizzaapi.service.PremadePizzaService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-
-    private final PizzaComboService pizzaComboService;
 
     private final PremadePizzaService premadePizzaService;
 
@@ -36,11 +35,10 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, ModelMapper modelMapper, PizzaComboService pizzaComboService,
+    public OrderServiceImpl(OrderRepository orderRepository, ModelMapper modelMapper,
                             PremadePizzaService premadePizzaService, IngredientService ingredientService) {
         this.orderRepository = orderRepository;
         this.modelMapper = modelMapper;
-        this.pizzaComboService = pizzaComboService;
         this.premadePizzaService = premadePizzaService;
         this.ingredientService = ingredientService;
     }
@@ -57,7 +55,10 @@ public class OrderServiceImpl implements OrderService {
             pizzaCombo.setPremadePizza(this.premadePizzaService.read(pizzaCombo.getPremadePizza().getId()).orElseThrow(
                     () -> new ResourceNotFoundException("cannot find premade pizza with id " + pizzaCombo.getPremadePizza().getId())));
             pizzaCombo.setPrice(calculatePizzaComboPrice(pizzaCombo));
-            this.pizzaComboService.save(pizzaCombo);
+            List<Order> ordersList = new ArrayList<>();
+            ordersList.add(order);
+            pizzaCombo.setOrders(ordersList);
+            pizzaCombo.getOrders().add(order);
         }
         order.setPrice(calculateOrderPrice(order));
         order = this.orderRepository.save(order);

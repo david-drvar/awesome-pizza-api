@@ -53,7 +53,7 @@ public class Order {
 
     @Valid
     @NotEmpty(message = "pizza combo list must not be empty")
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinTable(name = "order_pizzacombo",
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "pizzacombo_id"))

@@ -36,9 +36,6 @@ public class OrderServiceTest {
     private OrderRepository orderRepository;
 
     @Mock
-    private PizzaComboService pizzaComboService;
-
-    @Mock
     private PremadePizzaService premadePizzaService;
 
     @Mock
@@ -83,9 +80,6 @@ public class OrderServiceTest {
 
         when(premadePizzaService.read(Mockito.anyLong()))
                 .thenReturn(Optional.of(premadePizza));
-
-        when(pizzaComboService.save(any(PizzaCombo.class)))
-                .thenAnswer(invocation -> invocation.getArgument(0));
 
         assertDoesNotThrow(() -> orderService.save(orderDTO));
 
