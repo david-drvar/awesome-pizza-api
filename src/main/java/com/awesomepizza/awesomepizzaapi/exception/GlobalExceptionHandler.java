@@ -50,7 +50,7 @@ public class GlobalExceptionHandler {
         List<String> errorMessages = ex.getBindingResult().getFieldErrors().stream()
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.toList());
-        ExceptionResponse exceptionResponse = new ExceptionResponse(HttpStatus.BAD_REQUEST, "Validation error", errorMessages);
+        ExceptionResponseWithErrors exceptionResponse = new ExceptionResponseWithErrors(HttpStatus.BAD_REQUEST, "Validation error", errorMessages);
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
 
