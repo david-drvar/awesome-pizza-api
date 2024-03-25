@@ -1,6 +1,7 @@
 package com.awesomepizza.awesomepizzaapi.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class PremadePizza {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "premade pizza name must not be null")
+    @NotEmpty(message = "premade pizza name must not be null")
     private String name;
 
     @ManyToMany(fetch = FetchType.LAZY)

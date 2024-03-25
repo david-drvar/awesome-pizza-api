@@ -20,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDTO {
-    private long id;
+    private Long id;
     private LocalDateTime timestamp;
 
     @NotEmpty(message = "phone number must not be empty")

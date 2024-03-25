@@ -2,7 +2,9 @@ package com.awesomepizza.awesomepizzaapi.service;
 
 import com.awesomepizza.awesomepizzaapi.dto.OrderDTO;
 import com.awesomepizza.awesomepizzaapi.exception.NoOrdersPlacedException;
+import com.awesomepizza.awesomepizzaapi.exception.OrderModificationException;
 import com.awesomepizza.awesomepizzaapi.exception.OrderQueueException;
+import com.awesomepizza.awesomepizzaapi.exception.ResourceNotFoundException;
 import com.awesomepizza.awesomepizzaapi.model.*;
 import com.awesomepizza.awesomepizzaapi.model.enums.OrderStatus;
 import com.awesomepizza.awesomepizzaapi.model.enums.PizzaSize;
@@ -342,6 +344,36 @@ public class OrderServiceTest {
 
         assertEquals(preparingOrder, finishedOrder);
         assertEquals(OrderStatus.READY, finishedOrder.getOrderStatus());
+    }
+
+    @Test
+    public void testDeleteOrderIdNotExists() {
+        Order orderForDeletion = new Order();
+        orderForDeletion.setId(1L);
+        orderForDeletion.setOrderStatus(OrderStatus.PLACED);
+        when(orderRepository.findById(orderForDeletion.getId())).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> orderService.delete(orderForDeletion.getId()));
+    }
+
+    @Test
+    public void testDeleteOrderNotPlaced() {
+        Order orderForDeletion = new Order();
+        orderForDeletion.setId(1L);
+        orderForDeletion.setOrderStatus(OrderStatus.PREPARING);
+        when(orderRepository.findById(orderForDeletion.getId())).thenReturn(Optional.of(orderForDeletion));
+
+        assertThrows(OrderModificationException.class, () -> orderService.delete(orderForDeletion.getId()));
+    }
+
+    @Test
+    public void testDeleteOrderOK() {
+        Order orderForDeletion = new Order();
+        orderForDeletion.setId(1L);
+        orderForDeletion.setOrderStatus(OrderStatus.PLACED);
+        when(orderRepository.findById(orderForDeletion.getId())).thenReturn(Optional.of(orderForDeletion));
+
+        assertDoesNotThrow(() -> orderService.delete(orderForDeletion.getId()));
     }
 
 }

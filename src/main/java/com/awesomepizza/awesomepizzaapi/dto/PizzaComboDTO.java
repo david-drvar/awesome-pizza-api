@@ -15,6 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PizzaComboDTO {
+
+    private Long id;
+
     @Valid
     @NotNull(message = "premade pizza must not be empty")
     private PremadePizzaDTO premadePizza;
