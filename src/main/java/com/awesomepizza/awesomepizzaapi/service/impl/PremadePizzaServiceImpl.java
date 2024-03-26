@@ -1,5 +1,6 @@
 package com.awesomepizza.awesomepizzaapi.service.impl;
 
+import com.awesomepizza.awesomepizzaapi.model.Ingredient;
 import com.awesomepizza.awesomepizzaapi.model.PremadePizza;
 import com.awesomepizza.awesomepizzaapi.repository.PremadePizzaRepository;
 import com.awesomepizza.awesomepizzaapi.service.PremadePizzaService;
@@ -43,5 +44,10 @@ public class PremadePizzaServiceImpl implements PremadePizzaService {
     @Override
     public boolean existsById(Long id) {
         return this.premadePizzaRepository.existsById(id);
+    }
+
+    @Override
+    public Collection<PremadePizza> getAllContainingIngredient(Ingredient ingredient) {
+        return this.premadePizzaRepository.findAllByIngredientListContainingIgnoreCase(ingredient);
     }
 }

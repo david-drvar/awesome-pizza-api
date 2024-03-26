@@ -1,41 +1,52 @@
 -- Populate 'ingredient' table
 INSERT INTO ingredient (name, price)
-VALUES ('Tomato sauce', 1.5),
-       ('Mozzarella cheese', 2.0),
+VALUES ('Tomato sauce', 1.2),
+       ('Mozzarella cheese', 1.5),
        ('Pepperoni', 1.75),
-       ('Mushrooms', 1.25),
-       ('Onions', 1.0),
-       ('Green peppers', 1.0),
-       ('Olives', 1.25),
-       ('Bacon', 1.5),
-       ('Ham', 1.75),
-       ('Pineapple', 1.75);
+       ('Mushrooms', 1.85),
+       ('Onions', 1.5),
+       ('Green peppers', 1.4),
+       ('Olives', 1.5),
+       ('Bacon', 2),
+       ('Ham', 1.95),
+       ('Pineapple', 1.95);
 
 -- Populate 'ingredient_price_history' table
 INSERT INTO ingredient_price_history (price, date_start, ingredient_id)
-VALUES (1.5, CURRENT_TIMESTAMP, 1),
-       (2.0, CURRENT_TIMESTAMP, 2),
-       (1.75, CURRENT_TIMESTAMP, 3),
-       (1.25, CURRENT_TIMESTAMP, 4),
-       (1.0, CURRENT_TIMESTAMP, 5),
-       (1.0, CURRENT_TIMESTAMP, 6),
-       (1.25, CURRENT_TIMESTAMP, 7),
-       (1.5, CURRENT_TIMESTAMP, 8),
-       (1.75, CURRENT_TIMESTAMP, 9),
-       (1.75, CURRENT_TIMESTAMP, 10);
+VALUES (1.2, CURRENT_TIMESTAMP - INTERVAL '1 DAY', 1),
+       (1.5, CURRENT_TIMESTAMP - INTERVAL '1 DAY', 2),
+       (1.75, CURRENT_TIMESTAMP - INTERVAL '1 DAY', 3),
+       (1.85, CURRENT_TIMESTAMP - INTERVAL '1 DAY', 4),
+       (1.5, CURRENT_TIMESTAMP - INTERVAL '1 DAY', 5),
+       (1.4, CURRENT_TIMESTAMP - INTERVAL '1 DAY', 6),
+       (1.50, CURRENT_TIMESTAMP - INTERVAL '1 DAY', 7),
+       (2, CURRENT_TIMESTAMP - INTERVAL '1 DAY', 8),
+       (1.95, CURRENT_TIMESTAMP - INTERVAL '1 DAY', 9),
+       (1.95, CURRENT_TIMESTAMP - INTERVAL '1 DAY', 10),
 
--- Populate 'premade_pizza' table
+       (1, CURRENT_TIMESTAMP, 1),
+       (1.75, CURRENT_TIMESTAMP, 2),
+       (1.5, CURRENT_TIMESTAMP, 3),
+       (1.20, CURRENT_TIMESTAMP, 4),
+       (1.3, CURRENT_TIMESTAMP, 5),
+       (1.1, CURRENT_TIMESTAMP, 6),
+       (1.20, CURRENT_TIMESTAMP, 7),
+       (1.75, CURRENT_TIMESTAMP, 8),
+       (2, CURRENT_TIMESTAMP, 9),
+       (2, CURRENT_TIMESTAMP, 10);
+
+-- -- Populate 'premade_pizza' table
 INSERT INTO premade_pizza (name, price)
-VALUES ('Margherita', 8.99),
+VALUES ('Margherita', 8.74),
        ('Pepperoni', 9.99),
-       ('Vegetarian', 10.99),
-       ('Hawaiian', 11.99),
-       ('Meat Lover', 12.99),
-       ('Supreme', 13.99),
-       ('BBQ Chicken', 11.99),
-       ('Buffalo Chicken', 11.99),
-       ('Four Cheese', 10.99),
-       ('Mediterranean', 12.99);
+       ('Vegetarian', 8.29),
+       ('Hawaiian', 9.74),
+       ('Meat Lover', 7.99),
+       ('Supreme', 9.69),
+       ('BBQ Chicken', 11.74),
+       ('Buffalo Chicken', 10.54),
+       ('Four Cheese', 10.19),
+       ('Mediterranean', 9.94);
 
 -- Populate 'pizza_combo' table
 INSERT INTO pizza_combo (price, premade_pizza_id, pizza_size)
@@ -100,7 +111,7 @@ VALUES (1, 1),
        (9, 4),
        (10, 5);
 
--- Populate 'premade_pizza_ingredient' table
+
 INSERT INTO premade_pizza_ingredient (ingredient_id, premade_pizza_id)
 VALUES (1, 1),
        (2, 1),
@@ -111,8 +122,22 @@ VALUES (1, 1),
        (7, 3),
        (8, 4),
        (9, 4),
-       (10, 5);
-
+       (10, 5),
+       (1, 6),
+       (3, 6),
+       (7, 6),
+       (8, 7),
+       (9, 7),
+       (10, 7),
+       (3, 8),
+       (5, 8),
+       (2, 8),
+       (1, 9),
+       (4, 9),
+       (9, 9),
+       (1, 10),
+       (2, 10),
+       (4, 10);
 
 -- Populate 'user' table
 INSERT INTO users (login, password, role)

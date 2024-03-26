@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -22,9 +22,9 @@ public class IngredientPriceHistory {
     private Double price;
 
     @NotNull(message = "price start date must not be null")
-    private LocalDateTime dateStart;
+    private LocalDate dateStart;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
 }

@@ -6,6 +6,7 @@ import com.awesomepizza.awesomepizzaapi.service.IngredientPriceHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -42,5 +43,10 @@ public class IngredientPriceHistoryServiceImpl implements IngredientPriceHistory
     @Override
     public boolean existsById(Long id) {
         return this.ingredientPriceHistoryRepository.existsById(id);
+    }
+
+    @Override
+    public Collection<IngredientPriceHistory> getIngredientPriceHistoryByDate(LocalDate localDate) {
+        return this.ingredientPriceHistoryRepository.findAllByDateStartEquals(localDate);
     }
 }

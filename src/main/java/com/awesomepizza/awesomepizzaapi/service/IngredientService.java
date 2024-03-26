@@ -4,4 +4,6 @@ import com.awesomepizza.awesomepizzaapi.model.Ingredient;
 
 public interface IngredientService extends CRUDService<Ingredient> {
 
+    void updatePrices();
+
 }

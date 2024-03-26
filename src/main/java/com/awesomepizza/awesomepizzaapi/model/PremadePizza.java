@@ -15,6 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 public class PremadePizza {
 
+    @Transient
+    public static final Double PIZZA_BASE_PRICE = 5.99;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,7 +25,7 @@ public class PremadePizza {
     @NotEmpty(message = "premade pizza name must not be null")
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "premadePizza_ingredient",
             joinColumns = @JoinColumn(name = "premadePizza_id"),
             inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
