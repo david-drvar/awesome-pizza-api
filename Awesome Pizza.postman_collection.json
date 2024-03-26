@@ -366,7 +366,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"login\": \"pizzamaker2\",\n  \"password\": \"supersafepassword\",\n  \"role\": \"PIZZAMAKER\"\n}",
+          "raw": "{\n  \"username\": \"pizzamaker2\",\n  \"password\": \"supersafepassword\",\n  \"role\": \"PIZZAMAKER\"\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -409,7 +409,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"login\": \"pizzamaker\",\n  \"password\": \"supersafepassword\"\n}",
+          "raw": "{\n  \"username\": \"pizzamaker\",\n  \"password\": \"supersafepassword\"\n}",
           "options": {
             "raw": {
               "language": "json"
