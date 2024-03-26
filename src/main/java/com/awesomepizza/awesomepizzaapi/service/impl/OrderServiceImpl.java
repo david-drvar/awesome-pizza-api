@@ -13,6 +13,7 @@ import com.awesomepizza.awesomepizzaapi.repository.OrderRepository;
 import com.awesomepizza.awesomepizzaapi.service.IngredientService;
 import com.awesomepizza.awesomepizzaapi.service.OrderService;
 import com.awesomepizza.awesomepizzaapi.service.PremadePizzaService;
+import org.springframework.transaction.annotation.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDTO save(OrderDTO entity) {
         Order order = modelMapper.map(entity, Order.class);
 
@@ -88,16 +90,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Collection<Order> read() {
         return this.orderRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Order> read(Long id) {
         return this.orderRepository.findById(id);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         Order order = this.orderRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("cannot find order with id " + id));
@@ -107,17 +112,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsById(Long id) {
         return this.orderRepository.existsById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public OrderStatus getOrderStatus(Long id) {
         Optional<Order> order = this.orderRepository.findById(id);
         return order.map(Order::getOrderStatus).orElse(null);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Order getNextOrder() {
         //check if there is one that is preparing
         //if there is, you cannot take the next order
@@ -137,6 +145,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Order startOrder() {
         //find oldest placed order
         Optional<Order> firstPlacedOrder = this.orderRepository.findFirstByOrderStatusOrderByTimestampAsc(OrderStatus.PLACED);
@@ -160,6 +169,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Order finishOrder() {
         Optional<Order> firstPlacedOrder = this.orderRepository.findFirstByOrderStatusOrderByTimestampAsc(OrderStatus.PREPARING);
         if (firstPlacedOrder.isEmpty())
