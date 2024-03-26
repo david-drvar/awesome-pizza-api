@@ -26,18 +26,18 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "user login must not be null")
-    private String login;
+    @NotEmpty(message = "username must not be empty")
+    private String username;
 
-    @NotEmpty(message = "user password must not be null")
+    @NotEmpty(message = "user password must not be empty")
     private String password;
 
     @NotNull(message = "user role must not be null")
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    public User(String login, String password, UserRole role) {
-        this.login = login;
+    public User(String username, String password, UserRole role) {
+        this.username = username;
         this.password = password;
         this.role = role;
     }
@@ -52,7 +52,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return login;
+        return username;
     }
 
     @Override

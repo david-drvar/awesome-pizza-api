@@ -140,6 +140,6 @@ VALUES (1, 1),
        (4, 10);
 
 -- Populate 'user' table
-INSERT INTO users (login, password, role)
+INSERT INTO users (username, password, role)
 VALUES ('admin', '$2a$10$xaqBrGvBd/lj0dr8j.KjTeN7V0JsCFn8fZx2rwiMaVui.k4JlmWgG', 'ADMIN'),
        ('pizzamaker', '$2a$10$xaqBrGvBd/lj0dr8j.KjTeN7V0JsCFn8fZx2rwiMaVui.k4JlmWgG', 'PIZZAMAKER');

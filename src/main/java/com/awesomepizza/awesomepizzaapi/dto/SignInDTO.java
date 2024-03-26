@@ -12,8 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class SignInDTO {
 
-    @NotEmpty(message = "login must not be empty")
-    private String login;
+    @NotEmpty(message = "username must not be empty")
+    private String username;
 
     @NotEmpty(message = "password must not be empty")
     private String password;
