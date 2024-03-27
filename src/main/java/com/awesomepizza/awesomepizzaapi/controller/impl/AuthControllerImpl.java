@@ -1,6 +1,7 @@
 package com.awesomepizza.awesomepizzaapi.controller.impl;
 
 import com.awesomepizza.awesomepizzaapi.config.TokenProvider;
+import com.awesomepizza.awesomepizzaapi.controller.AuthController;
 import com.awesomepizza.awesomepizzaapi.dto.JwtDTO;
 import com.awesomepizza.awesomepizzaapi.dto.SignInDTO;
 import com.awesomepizza.awesomepizzaapi.dto.SignUpDTO;
@@ -22,24 +23,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @PermitAll
-public class AuthController {
+public class AuthControllerImpl implements AuthController {
     private final AuthenticationManager authenticationManager;
     private final AuthService authService;
     private final TokenProvider tokenProvider;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, AuthService authService, TokenProvider tokenProvider) {
+    public AuthControllerImpl(AuthenticationManager authenticationManager, AuthService authService, TokenProvider tokenProvider) {
         this.authenticationManager = authenticationManager;
         this.authService = authService;
         this.tokenProvider = tokenProvider;
     }
 
+    @Override
     @PostMapping("/signup")
     public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpDTO data) {
         authService.signUp(data);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Override
     @PostMapping("/signin")
     public ResponseEntity<JwtDTO> signIn(@RequestBody @Valid SignInDTO data) {
         UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(data.getUsername(), data.getPassword());

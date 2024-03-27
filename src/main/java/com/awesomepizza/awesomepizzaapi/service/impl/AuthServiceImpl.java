@@ -7,7 +7,7 @@ import com.awesomepizza.awesomepizzaapi.repository.UserRepository;
 import com.awesomepizza.awesomepizzaapi.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,9 +15,12 @@ public class AuthServiceImpl implements AuthService {
 
     UserRepository userRepository;
 
+    PasswordEncoder passwordEncoder;
+
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository) {
+    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -30,7 +33,7 @@ public class AuthServiceImpl implements AuthService {
         if (userRepository.findByUsername(data.getUsername()) != null)
             throw new UsernameExistsException("Username already exists");
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.getPassword());
+        String encryptedPassword = passwordEncoder.encode(data.getPassword());
         User newUser = new User(data.getUsername(), encryptedPassword, data.getRole());
         userRepository.save(newUser);
     }
